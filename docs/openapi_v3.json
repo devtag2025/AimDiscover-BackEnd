@@ -1,0 +1,839 @@
+{
+  "swagger": "2.0",
+  "paths": {
+    "/api/v1/webhooks/stripe": {
+      "post": {
+        "summary": "/api/v1/webhooks/stripe",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": [
+          "webhook"
+        ]
+      }
+    },
+    "/api/v1/webhooks/meshy": {
+      "post": {
+        "summary": "/api/v1/webhooks/meshy",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": [
+          "webhook"
+        ]
+      }
+    },
+    "/api/v1/auth/register": {
+      "post": {
+        "summary": "/api/v1/auth/register",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": []
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "summary": "/api/v1/auth/login",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": []
+      }
+    },
+    "/api/v1/auth/forgot-password": {
+      "post": {
+        "summary": "/api/v1/auth/forgot-password",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": []
+      }
+    },
+    "/api/v1/auth/reset-password": {
+      "post": {
+        "summary": "/api/v1/auth/reset-password",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": []
+      }
+    },
+    "/api/v1/auth/verify-email/{token}": {
+      "get": {
+        "summary": "/api/v1/auth/verify-email/{token}",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {},
+        "tags": []
+      }
+    },
+    "/api/v1/auth/resend-verification": {
+      "post": {
+        "summary": "/api/v1/auth/resend-verification",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": []
+      }
+    },
+    "/api/v1/auth/refresh-token": {
+      "get": {
+        "summary": "/api/v1/auth/refresh-token",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": []
+      }
+    },
+    "/api/v1/auth/google": {
+      "get": {
+        "summary": "/api/v1/auth/google",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": []
+      }
+    },
+    "/api/v1/auth/google/callback": {
+      "get": {
+        "summary": "/api/v1/auth/google/callback",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": []
+      }
+    },
+    "/api/v1/auth/profile": {
+      "get": {
+        "summary": "/api/v1/auth/profile",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": []
+      },
+      "put": {
+        "summary": "/api/v1/auth/profile",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": []
+      }
+    },
+    "/api/v1/auth/change-password": {
+      "post": {
+        "summary": "/api/v1/auth/change-password",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": []
+      }
+    },
+    "/api/v1/auth/logout": {
+      "post": {
+        "summary": "/api/v1/auth/logout",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": []
+      }
+    },
+    "/api/v1/auth/register-user": {
+      "post": {
+        "summary": "/api/v1/auth/register-user",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": []
+      }
+    },
+    "/api/v1/auth/dashboard-stats": {
+      "get": {
+        "summary": "/api/v1/auth/dashboard-stats",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": []
+      }
+    },
+    "/api/v1/auth/user/{userId}": {
+      "delete": {
+        "summary": "/api/v1/auth/user/{userId}",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {},
+        "tags": []
+      }
+    },
+    "/api/v1/auth/users": {
+      "get": {
+        "summary": "/api/v1/auth/users",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": []
+      }
+    },
+    "/api/v1/plans": {
+      "get": {
+        "summary": "/api/v1/plans",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": []
+      },
+      "post": {
+        "summary": "/api/v1/plans",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": []
+      }
+    },
+    "/api/v1/plans/{planId}": {
+      "get": {
+        "summary": "/api/v1/plans/{planId}",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "planId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {},
+        "tags": []
+      },
+      "put": {
+        "summary": "/api/v1/plans/{planId}",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "planId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {},
+        "tags": []
+      },
+      "delete": {
+        "summary": "/api/v1/plans/{planId}",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "planId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {},
+        "tags": []
+      }
+    },
+    "/api/v1/subscriptions/checkout": {
+      "post": {
+        "summary": "/api/v1/subscriptions/checkout",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": []
+      }
+    },
+    "/api/v1/categories": {
+      "post": {
+        "summary": "/api/v1/categories",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": []
+      },
+      "get": {
+        "summary": "/api/v1/categories",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "statusCode": {
+                  "type": "number",
+                  "example": 200
+                },
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Categories retrieved successfully"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "categories": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "ai_prompt": {
+                            "type": "string"
+                          },
+                          "createdAt": {
+                            "type": "string"
+                          },
+                          "updatedAt": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "example": [
+                        {
+                          "id": "hascwp1gl16g9gchyik37a9y",
+                          "name": "SmartPhone",
+                          "ai_prompt": "This the best smartPhone",
+                          "createdAt": "2025-11-26T06:36:39.899Z",
+                          "updatedAt": "2025-11-26T06:36:39.899Z"
+                        }
+                      ]
+                    },
+                    "pagination": {
+                      "type": "object",
+                      "properties": {
+                        "totalCategories": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "totalPages": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "currentPage": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "limit": {
+                          "type": "number",
+                          "example": 10
+                        },
+                        "hasNextPage": {
+                          "type": "boolean",
+                          "example": false
+                        },
+                        "hasPrevPage": {
+                          "type": "boolean",
+                          "example": false
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/api/v1/categories/{id}": {
+      "get": {
+        "summary": "/api/v1/categories/{id}",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {},
+        "tags": []
+      },
+      "put": {
+        "summary": "/api/v1/categories/{id}",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {},
+        "tags": []
+      },
+      "delete": {
+        "summary": "/api/v1/categories/{id}",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {},
+        "tags": []
+      }
+    },
+    "/api/v1/analysis": {
+      "post": {
+        "summary": "/api/v1/analysis",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Analysis completed. 3D model generation started."
+                },
+                "insights": {
+                  "type": "string",
+                  "example": "# Product Analysis Report\n\n## Executive Summary\nThe Apple iPhone 13 presents a strong market opportunity due to its established brand equity and consistent consumer demand within the premium smartphone segment. Positioned as a high-end device, it caters to tech-savvy and brand-loyal customers, maintaining Apple’s dominance in the global smartphone market with a reported 17% market share in Q2 2023 (per Statista).\n\n---\n\n## Market Drivers\n\n### Primary Trend Catalyst\nApple’s annual product refresh cycle, coupled with targeted marketing campaigns during the iPhone 13 launch window (September 2021), continues to sustain interest through periodic promotions and carrier deals.\n\n### Secondary Factors\n- Widespread adoption of 5G technology, with 62% of global smartphone users expected to use 5G by 2025 (GSMA Intelligence), driving demand for compatible devices like the iPhone 13.\n- Strong ecosystem lock-in with Apple services (iCloud, Apple Music, App Store), encouraging upgrades among existing users.\n- Consumer preference for premium design and durability, reinforced by the iPhone 13’s matte glass finish and edge-to-edge display.\n\n---\n\n## Target Demographics\n\n### Primary Audience\nAffluent professionals and tech enthusiasts aged 25-44, with disposable income above $60,000 annually, valuing brand status and cutting-edge technology.\n\n### Secondary Markets\nStudents and young adults aged 18-24, often purchasing through carrier plans or family subsidies, and older adults aged 45-60 seeking reliable, user-friendly devices.\n\n### Common Use Cases\n1. Daily communication and productivity (calls, emails, apps like Slack).\n2. High-quality photography and videography using the triple-camera system.\n3. Entertainment consumption (streaming, gaming) on the edge-to-edge display.\n\n---\n\n## Commercial Viability\n\n| Metric             | Assessment       | Notes                                  |\n|--------------------|------------------|----------------------------------------|\n| Price Range        | $699 - $1,099    | Varies by storage capacity and model   |\n| Margin Potential   | Medium           | High retail price offset by Apple’s strict pricing control and supply chain costs |\n| Competition        | High             | Samsung, Google Pixel, and Xiaomi dominate similar price segments |\n| Barrier to Entry   | High             | Significant capital required for inventory and Apple’s reseller agreements |\n\n### Recommended Platforms\n- **Primary:** Apple Store and authorized resellers (e.g., Best Buy) due to direct access to inventory and customer trust in authentic products.\n- **Secondary:** E-commerce platforms like Amazon for broader reach, leveraging Prime shipping and customer reviews.\n\n---\n\n## Trend Trajectory\n\n### Current Phase\nPlateau – The iPhone 13, while still relevant, is overshadowed by newer models like the iPhone 14 and 15, with interest sustained by price reductions and carrier promotions.\n\n### Demand Forecast\nStable demand over the next 30-90 days, with a potential uptick during holiday shopping seasons (November-December) as discounts are typically introduced.\n\n### Seasonality\nRecurring seasonal potential tied to holiday sales and back-to-school periods, though long-term demand may wane as newer models gain traction.\n\n---\n\n## Competitive Advantages\n\n### Key Differentiators\n1. **Brand Ecosystem:** Seamless integration with Apple Watch, MacBook, and iOS apps creates high switching costs for users.\n2. **Camera Technology:** The triple-camera module offers advanced features like cinematic mode and night mode, appealing to content creators.\n3. **Design Appeal:** The sleek, minimalist design with a 2.5:1 height-to-width ratio and matte glass back differentiates it in a crowded market.\n\n### Value Proposition\nThe iPhone 13 delivers a premium, reliable smartphone experience with superior build quality and ecosystem benefits for loyal Apple users.\n\n---\n\n## Risk Assessment\n\n### Potential Challenges\n- High competition from Samsung Galaxy S-series and Google Pixel, mitigated by emphasizing Apple’s ecosystem benefits in marketing.\n- Price sensitivity among secondary markets, addressed by offering financing options or bundled carrier plans.\n\n### Quality Considerations\nEnsure sourcing from authorized distributors to avoid counterfeit units; verify camera functionality and display quality as key selling points.\n\n### Timing Sensitivity\nOptimal market entry aligns with holiday sales (Q4) or promotional events like Black Friday to capitalize on discounted pricing strategies by Apple and carriers.\n\n---\n\n## Strategic Recommendations\n\n### Immediate Actions (0-7 days)\n1. Conduct a competitive pricing analysis across major platforms to identify optimal retail positioning.\n2. Secure inventory commitments with authorized Apple distributors to ensure supply for upcoming seasonal demand.\n\n### Short-term Strategy (7-30 days)\n1. Develop targeted digital ad campaigns focusing on the iPhone 13’s camera capabilities and ecosystem benefits, aimed at primary and secondary demographics.\n2. Partner with carriers to offer bundle deals or trade-in programs to lower the effective purchase cost for price-sensitive buyers.\n\n### Success Metrics\n- Sales volume growth of 10-15% month-over-month during promotional periods.\n- Customer acquisition rate from secondary markets, targeting a 5% increase in student and older adult segments.\n\n---\n\n*Analysis generated based on current market signals. Recommend validating with additional supplier and competitor research.*"
+                },
+                "model3D": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "3D model preview generation started. Webhook will notify on completion."
+                    },
+                    "taskId": {
+                      "type": "string",
+                      "example": "h8nf574zqt981y4smo1cjhf4"
+                    },
+                    "previewTaskId": {
+                      "type": "string",
+                      "example": "019abfb0-f34b-7288-a1b3-10a71f386a17"
+                    },
+                    "prompt": {
+                      "type": "string",
+                      "example": "Apple iPhone 13, sleek smartphone, tall rectangular slab with 2.5:1 height-to-width ratio. Front: edge-to-edge glossy black glass display, thin black bezels, notch centered at top. Back: solid matte glass panel, triple camera module in top-left corner only. Bottom edge: single centered USB-C charging port, speaker grilles flanking port. Right edge: volume buttons upper third, power button middle. Left edge and top edge: no ports or buttons."
+                    },
+                    "artStyle": {
+                      "type": "string",
+                      "example": "realistic"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "PENDING"
+                    },
+                    "progress": {
+                      "type": "number",
+                      "example": 0
+                    }
+                  }
+                },
+                "metadata": {
+                  "type": "object",
+                  "properties": {
+                    "category": {
+                      "type": "string",
+                      "example": "SmartPhone"
+                    },
+                    "region": {
+                      "type": "string",
+                      "example": "Korea"
+                    },
+                    "productName": {
+                      "type": "string",
+                      "example": "Apple Iphone 13"
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "example": "2025-11-26T10:24:42.779Z"
+                    },
+                    "grokModel": {
+                      "type": "string",
+                      "example": "grok-3"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Internal server error during analysis"
+                },
+                "error": {
+                  "type": "string",
+                  "example": "Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/api/v1/analysis/3d-status/{taskId}": {
+      "get": {
+        "summary": "/api/v1/analysis/3d-status/{taskId}",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "taskId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "h8nf574zqt981y4smo1cjhf4"
+                },
+                "previewTaskId": {
+                  "type": "string",
+                  "example": "019abfb0-f34b-7288-a1b3-10a71f386a17"
+                },
+                "refineTaskId": {
+                  "type": "null",
+                  "example": null
+                },
+                "status": {
+                  "type": "string",
+                  "example": "IN_PROGRESS"
+                },
+                "stage": {
+                  "type": "string",
+                  "example": "preview"
+                },
+                "progress": {
+                  "type": "number",
+                  "example": 50
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Generating 3D model geometry..."
+                },
+                "modelUrls": {
+                  "type": "object",
+                  "properties": {
+                    "glb": {
+                      "type": "string",
+                      "example": ""
+                    }
+                  }
+                },
+                "textureUrls": {
+                  "type": "null",
+                  "example": null
+                },
+                "thumbnailUrl": {
+                  "type": "null",
+                  "example": null
+                },
+                "videoUrl": {
+                  "type": "null",
+                  "example": null
+                },
+                "prompt": {
+                  "type": "string",
+                  "example": "Apple iPhone 13, sleek smartphone, tall rectangular slab with 2.5:1 height-to-width ratio. Front: edge-to-edge glossy black glass display, thin black bezels, notch centered at top. Back: solid matte glass panel, triple camera module in top-left corner only. Bottom edge: single centered USB-C charging port, speaker grilles flanking port. Right edge: volume buttons upper third, power button middle. Left edge and top edge: no ports or buttons."
+                },
+                "artStyle": {
+                  "type": "string",
+                  "example": "realistic"
+                },
+                "taskError": {
+                  "type": "null",
+                  "example": null
+                },
+                "createdAt": {
+                  "type": "string",
+                  "example": "2025-11-26T10:23:58.714Z"
+                },
+                "finishedAt": {
+                  "type": "null",
+                  "example": null
+                },
+                "isFullyComplete": {
+                  "type": "null",
+                  "example": null
+                },
+                "hasModel": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "hasTextures": {
+                  "type": "null",
+                  "example": null
+                },
+                "isRefined": {
+                  "type": "null",
+                  "example": null
+                }
+              }
+            }
+          }
+        },
+        "tags": [],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/api/v1/analysis/3d-model/{taskId}": {
+      "get": {
+        "summary": "/api/v1/analysis/3d-model/{taskId}",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "taskId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {}
+        },
+        "tags": [],
+        "produces": [
+          "model/gltf-binary"
+        ]
+      }
+    },
+    "/api/v1/webhook/stripe": {
+      "post": {
+        "summary": "/api/v1/webhook/stripe",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": [
+          "webhook"
+        ]
+      }
+    },
+    "/api/v1/webhook/meshy": {
+      "post": {
+        "summary": "/api/v1/webhook/meshy",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Preview completed, refine task started"
+                },
+                "previewTaskId": {
+                  "type": "string",
+                  "example": "019abfaf-4905-7262-91a1-a21705f2d148"
+                },
+                "status": {
+                  "type": "string",
+                  "example": "SUCCEEDED"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "webhook"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/api/v1/grok": {
+      "get": {
+        "summary": "/api/v1/grok",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": []
+      }
+    },
+    "/api/v1": {
+      "get": {
+        "summary": "/api/v1",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": []
+      }
+    },
+    "/api/v1/docs": {
+      "get": {
+        "summary": "/api/v1/docs",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {},
+        "tags": []
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "oauth"
+    },
+    {
+      "name": "ads"
+    },
+    {
+      "name": "payment"
+    },
+    {
+      "name": "webhook"
+    }
+  ],
+  "definitions": {},
+  "info": {
+    "title": "Moveinn API",
+    "version": "1.0.0",
+    "description": "Fitness ad compaign platform"
+  },
+  "openapi": "3.0.0",
+  "servers": [
+    {
+      "url": "http://localhost:5000"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+ALTER TABLE "insights" ALTER COLUMN "summary" SET DATA TYPE varchar(1000);

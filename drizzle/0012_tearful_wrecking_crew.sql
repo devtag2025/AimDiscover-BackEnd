@@ -1,0 +1,1 @@
+CREATE INDEX "idx_generated_at" ON "insights" USING btree ("generated_at");

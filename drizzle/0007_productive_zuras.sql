@@ -1,0 +1,1 @@
+ALTER TABLE "meshy_tasks" ALTER COLUMN "id" SET DATA TYPE uuid;
