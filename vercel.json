@@ -9,7 +9,7 @@
   "routes": [
     {
       "src": "/(.*)",
-      "methods": ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+      "methods": ["GET", "POST"],
       "headers": {
         "Access-Control-Allow-Origin": "https://aim-discover-frontend-x4ip.vercel.app",
         "Access-Control-Allow-Credentials": "true",
