@@ -1,14 +1,22 @@
 {
-    "version": 2,
-    "builds": [
-        {
-            "src": "server.js", "use":"@vercel/node"
-        }
-    ],
-    "routes":[
-        {
-            "src": "/(.*)", "dest":"server.js"
-        }
-    ]
-
+  "version": 2,
+  "builds": [
+    {
+      "src": "server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "methods": ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+      "headers": {
+        "Access-Control-Allow-Origin": "https://aim-discover-frontend-x4ip-41cb0rd0p-developer-tags-projects.vercel.app",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Methods": "GET,POST,PUT,PATCH,DELETE,OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type,Authorization,X-Requested-With"
+      },
+      "dest": "server.js"
+    }
+  ]
 }
