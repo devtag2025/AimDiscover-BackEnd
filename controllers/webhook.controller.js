@@ -12,6 +12,9 @@ import fetch from 'node-fetch';
 // ===== STRIPE WEBHOOKS =====
 const MESHY_WEBHOOK_SECRET = env.MESHY_WEBHOOK_SECRET;
 console.log("----- MESHY_WEBHOOK_SECRET" , !!MESHY_WEBHOOK_SECRET)
+
+console.log("Client URL",!!env.FRONTEND_URL,env.FRONTEND_URL);
+console.log("FRONTEND URL", !!env.CLIENT_URL,env.CLIENT_URL);
 export const handleStripeWebhook = async (req, res, next) => {
   try {
     const signature = req.headers['stripe-signature'];

@@ -38,7 +38,8 @@ const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:3001",
 ].filter(Boolean);
-
+console.log("Client URL",!!env.FRONTEND_URL,env.FRONTEND_URL);
+console.log("FRONTEND URL", !!env.ADMIN_PANEL_URL,env.ADMIN_PANEL_URL);
 app.use(
   cors({
     origin: allowedOrigins,

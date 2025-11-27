@@ -94,8 +94,8 @@ export const env = {
   EMAIL_VERIFICATION_SECRET: process.env.EMAIL_VERIFICATION_SECRET,
 
   // App URLs
-  CLIENT_URL: process.env.CLIENT_URL || "http://localhost:3000",
-  ADMIN_PANEL_URL: process.env.ADMIN_PANEL_URL || "http://localhost:3001",
+  CLIENT_URL: process.env.CLIENT_URL ,
+  ADMIN_PANEL_URL: process.env.ADMIN_PANEL_URL ,
   // Rate Limiting
   RATE_LIMIT_WINDOW_MS: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000,
   RATE_LIMIT_MAX_REQUESTS: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 100,

@@ -79,6 +79,8 @@ class EmailService {
 </div>`;
   }
 
+
+
   emailVerificationHTML(verificationToken, data = {}) {
     const url = `${env.FRONTEND_URL}/verify-email?token=${encodeURIComponent(verificationToken)}`;
     const name = data.userName || "there";
