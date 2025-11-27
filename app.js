@@ -35,6 +35,7 @@ if (env.NODE_ENV !== "production") {
 const allowedOrigins = [
   env.CLIENT_URL,
   env.ADMIN_PANEL_URL,
+  "https://aim-discover-frontend-x4ip.vercel.app",  
   "http://localhost:3000",
   "http://localhost:3001",
 ].filter(Boolean);
