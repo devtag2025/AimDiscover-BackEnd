@@ -53,38 +53,20 @@ app.use(
 
 app.use(passport.initialize());
 app.use(
-helmet({
-  crossOriginResourcePolicy: false,
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'", "https://aim-discover-frontend-x4ip.vercel.app"],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://aim-discover-frontend-x4ip.vercel.app"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "https://aim-discover-frontend-x4ip.vercel.app"],
-      imgSrc: [
-        "'self'",
-        "data:",
-        "https:",
-        "http://localhost:5000",
-        "https://aim-discover-frontend-x4ip.vercel.app",
-        "https://aim-discover-back-end.vercel.app" // added backend for images
-      ],
-      connectSrc: [
-        "'self'",
-        "http://localhost:5000",
-        "http://localhost:3000",
-        "https://aim-discover-frontend-x4ip.vercel.app",
-        "https://aim-discover-back-end.vercel.app" // added backend for API requests
-      ],
-      frameSrc: [
-        "'self'",
-        "http://localhost:5000",
-        "https://aim-discover-frontend-x4ip.vercel.app",
-        "https://aim-discover-back-end.vercel.app" // optional, if backend serves frames
-      ],
+  helmet({
+    crossOriginResourcePolicy: false,
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        scriptSrc: ["'self'", "'unsafe-inline'"],
+        imgSrc: ["'self'", "data:", "https:", "http://localhost:5000"],
+        connectSrc: ["'self'", "http://localhost:5000", "http://localhost:3000"],
+        frameSrc: ["'self'", "http://localhost:5000"],
+      },
     },
-  },
-}));
-
+  })
+);
 
 app.use(xssClean());
 app.use(cookieParser());
