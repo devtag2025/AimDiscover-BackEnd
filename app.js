@@ -35,19 +35,26 @@ if (env.NODE_ENV !== "production") {
 const allowedOrigins = [
   env.CLIENT_URL,
   env.ADMIN_PANEL_URL,
-  "https://aim-discover-frontend-x4ip.vercel.app",  
+  "https://aim-discover-frontend-x4ip.vercel.app",
   "http://localhost:3000",
   "http://localhost:3001",
 ].filter(Boolean);
-console.log("Client URL",!!env.FRONTEND_URL,env.FRONTEND_URL);
-console.log("FRONTEND URL", !!env.ADMIN_PANEL_URL,env.ADMIN_PANEL_URL);
+
+// Handle preflight for all routes
+app.options("*", cors({
+  origin: allowedOrigins,
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+}));
+
 app.use(
   cors({
     origin: allowedOrigins,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
-    optionsSuccessStatus: 200, 
+    optionsSuccessStatus: 200,
     preflightContinue: false,
   })
 );
