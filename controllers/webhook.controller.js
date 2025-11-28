@@ -821,7 +821,7 @@ export const handleMeshyWebhook = async (req, res) => {
 };
 
 
-async function startRefineTask(previewTaskId, prompt, artStyle) {
+async function startRefineTask(previewTaskId, prompt) {
   try {
     console.log("\n🎨 === STARTING REFINE TASK ===");
     console.log("🆔 Preview Task ID:", previewTaskId);
@@ -1024,7 +1024,7 @@ const [task] = await db
     res.setHeader("Content-Type", "model/gltf-binary");
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
-    res.setHeader("Cache-Control", "public, max-age=31536000"); // Cache for 1 year
+    res.setHeader("Cache-Control", "public, max-age=31536000"); 
 
     console.log("✅ Model served successfully");
     res.send(Buffer.from(response.data));

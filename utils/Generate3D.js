@@ -32,7 +32,7 @@ const createPayload = {
   ai_model: "latest",        // let it use Meshy 6 Preview
   should_remesh: true,       // cleaner topology at target_polycount
   topology: "triangle",      // or omit and use default
-  target_polycount: 800000,   // or a bit higher, but not 200k
+  target_polycount: 300000,   // or a bit higher, but not 200k
   symmetry_mode: "on",     // especially important for characters/products
   webhook_url: `${env.NGROK_SERVER}/api/v1/webhook/meshy`,
 };
