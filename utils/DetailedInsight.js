@@ -3,9 +3,7 @@ import { env } from "../config/env.config.js";
 import { DETAILED_INSIGHT_PROMPT } from "./GrokAnalysisPrompt.js";
 const GROK_API_KEY = env.GROK_API_KEY;
 
-
-
-export async function generateDetailedInsight(grokInsight) {
+export async function generateDetailedInsight(grokInsight, region) {
   try {
     console.log("Generating detailed insight for:", grokInsight);
 
@@ -19,7 +17,14 @@ export async function generateDetailedInsight(grokInsight) {
           },
           {
             role: "user",
-            content: `Provide a comprehensive market analysis for the following trending product:\n\n${grokInsight}`,
+            content: `Provide a comprehensive market analysis for the following trending product.
+
+TARGET REGION: ${region}
+
+Tailor all insights, pricing, platforms, logistics, and recommendations specifically for the ${region} market.
+
+PRODUCT INFORMATION:
+${grokInsight}`,
           },
         ],
         model: "grok-3",

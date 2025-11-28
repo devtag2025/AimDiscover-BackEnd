@@ -1,7 +1,6 @@
 import * as openid from "openid-client";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
-import { getGoogleConfig, env } from "../config/index.js";
 import { ApiResponse, ApiError } from "../utils/index.js";
 import { UserService, userService } from "../services/user.service.js";
 import { emailService } from "../services/email.service.js";
@@ -14,17 +13,19 @@ import {
   generateRandomPassword,
   clearAuthCookies,
 } from "../helpers/auth.helper.js";
+import { env } from "../config/index.js";
 import { DashboardService } from "../services/dashboard.service.js";
 import { sql, gte } from "drizzle-orm";
 import { log } from "console";
 import passport from "../config/passport.config.js";
-const isProduction = process.env.NODE_ENV === "production";
+const isProduction = env.NODE_ENV === "production";
+
 
 // Helper to set auth tokens
 const setAuthTokens = (res, user) => {
   const accessToken = userService.generateAccessToken(user);
   const refreshToken = userService.generateRefreshToken(user);
-
+console.log(isProduction , "Is production" , !!isProduction);
   res.cookie("accessToken", accessToken, {
     httpOnly: false,
     secure: isProduction ? true : false, // only true in prod
@@ -141,14 +142,15 @@ export const signup = async (req, res, next) => {
 
 export const login = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
+   const { email, password } = req.body;
 
     if (!email || !password) {
       return res
         .status(400)
         .json(new ApiResponse(400, null, "Email and password required"));
     }
-
+console.log(isProduction , "Is production" , !!isProduction);
+console.log("Are you winning Son")
     const user = await userService.findByEmail(email);
     if (!user || !user.password) {
       return res

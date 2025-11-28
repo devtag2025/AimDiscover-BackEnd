@@ -243,7 +243,7 @@ export async function analyzeCategory(req, res) {
 
     const inputAnalysis = grokResult.analysis
 
-const DetailInsights = await generateDetailedInsight(inputAnalysis)
+const DetailInsights = await generateDetailedInsight(inputAnalysis,region)
 
 
    
