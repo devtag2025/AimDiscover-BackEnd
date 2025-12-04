@@ -19,6 +19,7 @@ export const emailConfig = {
   },
 
   templates: {
+    contact:"contact-service",
     welcome: "welcome",
     emailVerification: "email-verification",
     passwordReset: "password-reset",

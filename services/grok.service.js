@@ -4,6 +4,7 @@ import { insights } from "../schema/index.js";
 import { createId } from "@paralleldrive/cuid2";
 import axios from "axios";
 import GROK_ANALYSIS_PROMPT from "../utils/GrokAnalysisPrompt.js";
+import { desc } from "drizzle-orm";
 
 export class GrokService {
 
@@ -138,10 +139,11 @@ static async GetGrokInsights() {
   static async LatestInsights (){
   const start = Date.now();
 
-    const latest = await db
-     .select()
+
+const latest = await db
+  .select()
   .from(insights)
-  .orderBy(insights.generatedAt, "desc") 
+  .orderBy(desc(insights.generatedAt))
   .limit(1);
 
   console.log('LatestInsights query took', Date.now() - start, 'ms');

@@ -1,6 +1,17 @@
 import { transporter, emailConfig, env } from "../config/index.js";
+import { generateSupportEmailHTML } from "./templates/contact.template.js";
 
 class EmailService {
+
+ async contactSupportService(data = {}) {
+  const to = "developertag2025@gmail.com";  
+  const subject = "Customer Support";
+  const html = generateSupportEmailHTML(data);
+
+  return this.send(to, subject, html);
+}
+
+
   async sendPasswordResetEmail(email, resetToken, data = {}) {
     const subject = "Reset your password";
     const html = this.passwordResetHTML(resetToken, data);
@@ -60,6 +71,8 @@ class EmailService {
     }
   }
 
+
+
   passwordResetHTML(resetToken, data = {}) {
     const resetUrl = `${env.CLIENT_URL}/reset-password?token=${encodeURIComponent(resetToken)}`;
     const name = data.userName || "there";
@@ -78,8 +91,6 @@ class EmailService {
   </div>
 </div>`;
   }
-
-
 
   emailVerificationHTML(verificationToken, data = {}) {
     const url = `${env.FRONTEND_URL}/verify-email?token=${encodeURIComponent(verificationToken)}`;

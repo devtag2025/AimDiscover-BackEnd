@@ -7,7 +7,8 @@ import categoryRoutes from './category.route.js'
 import analysisRoutes from './analysis.route.js'
 import webhookRoutes from './webhook.route.js';
 import grokRoutes from './grok.route.js';
-// Main router for the application
+import supportRoutes from "./support.route.js"
+
 const router = Router();
 
 router.use("/auth", authRoutes);
@@ -16,8 +17,8 @@ router.use("/subscriptions", subscriptionRoutes);
 router.use("/categories", categoryRoutes);
 router.use("/analysis", analysisRoutes);
 router.use("/webhook",webhookRoutes);
-router.use("/grok",grokRoutes)
-// Add documentation or other routes as needed
+router.use("/grok",grokRoutes);
+router.use("/support",supportRoutes);
 router.get("/", (_req, res) => {
   res.send("Welcome to the AimDiscover API - AI-powered product discovery platform");
 });
