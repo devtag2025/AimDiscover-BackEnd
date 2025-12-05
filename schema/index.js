@@ -4,3 +4,4 @@ export * from "./subscriptions.js";
 export * from "./category.js"
 export * from "./meshy-tasks.js"
 export * from "./insights.js"
+export * from "./faq.js"

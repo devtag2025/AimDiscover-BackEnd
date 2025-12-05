@@ -9,7 +9,7 @@ export const generateSupportEmailHTML = (data) => {
     timeStyle: 'short'
   });
 
-  return `
+return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,7 +35,7 @@ export const generateSupportEmailHTML = (data) => {
         .header {
             background: linear-gradient(135deg, #1a1a1a 0%, #2d1b4e 50%, #1a1a1a 100%);
             color: #ffffff;
-            padding: 40px 20px;
+            padding: 24px 20px 12px;
             text-align: center;
             border-bottom: 2px solid #8a2be2;
             position: relative;
@@ -60,11 +60,25 @@ export const generateSupportEmailHTML = (data) => {
             background-clip: text;
         }
         .header p {
-            margin: 12px 0 0 0;
+            margin: 8px 0 16px 0;
             font-size: 14px;
             color: #b19cd9;
             letter-spacing: 0.3px;
         }
+        /* HERO IMAGE BLOCK */
+        .hero-image {
+            margin: 0 auto 8px;
+            max-width: 560px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .hero-image img {
+            display: block;
+            width: 100%;
+            height: auto;
+            border: 0;
+        }
+
         .content {
             padding: 35px 25px;
             background-color: #1a1a1a;
@@ -196,6 +210,14 @@ export const generateSupportEmailHTML = (data) => {
         <div class="header">
             <h1>New Support Request</h1>
             <p>Priority Customer Inquiry</p>
+
+            <!-- Hero image -->
+            <div class="hero-image">
+                <img 
+                  src="https://images.pexels.com/photos/7681831/pexels-photo-7681831.jpeg" 
+                  alt="Customer support illustration" 
+                />
+            </div>
         </div>
 
         <!-- Content -->
@@ -225,7 +247,6 @@ export const generateSupportEmailHTML = (data) => {
                 <h3>Customer Message:</h3>
                 <div class="message-content">${Message}</div>
             </div>
-
         </div>
 
         <!-- Footer -->
@@ -239,6 +260,7 @@ export const generateSupportEmailHTML = (data) => {
     </div>
 </body>
 </html>
-  `;
+`;
+
 };
 
