@@ -37,6 +37,11 @@ export const startGrokCron = (expression = "0 6 * * *", options = { timezone: "U
           keywords: insights.keywords,
           markets: insights.markets,
           summary: insights.summary,
+           platforms: insights.platforms ?? [],
+  sentiment: insights.sentiment ?? { global_score: 0, remarks: "" },
+
+  // support both names (your DB column is assumptions_global but your JSON is assumptionsGlobal)
+  assumptionsGlobal: insights.assumptionsGlobal ?? insights.assumptions_global ?? [],
         });
         console.log("[GrokCron] run success:", new Date().toISOString());
       } catch (err) {

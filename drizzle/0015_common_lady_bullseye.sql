@@ -1,0 +1,1 @@
+ALTER TABLE "insights" ALTER COLUMN "assumptions_global" DROP NOT NULL;

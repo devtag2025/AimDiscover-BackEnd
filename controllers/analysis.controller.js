@@ -183,7 +183,7 @@ export async function get3DModelStatus(req, res) {
 
 export async function analyzeCategory(req, res) {
   try {
-    const { categoryId, region, productName, artStyle = "realistic" } = req.body;
+    const { categoryId, region, productName, artStyle = "realistic", cogs } = req.body;
 
     console.log("\n🎯 === NEW ANALYSIS REQUEST ===");
     console.log("📦 Category ID:", categoryId);
@@ -191,7 +191,7 @@ export async function analyzeCategory(req, res) {
     console.log("🏷️ Product Name:", productName || "Not specified");
     console.log("🎨 Art Style:", artStyle);
 
-    if (!categoryId || !region) {
+    if (!categoryId || !region ||!cogs) {
       console.error("❌ Missing required fields");
       return res.status(400).json({
         success: false,
@@ -228,7 +228,7 @@ export async function analyzeCategory(req, res) {
       });
     }
 
-     // Step 2: Generate 3D model with Meshy
+    //  Step 2: Generate 3D model with Meshy
     const model3DResult = await generate3DModelWithMeshy(
       grokResult.analysis,
       artStyle
@@ -243,7 +243,7 @@ export async function analyzeCategory(req, res) {
 
     const inputAnalysis = grokResult.analysis
 
-const DetailInsights = await generateDetailedInsight(inputAnalysis,region)
+const DetailInsights = await generateDetailedInsight(inputAnalysis,region,cogs)
 
 
    
@@ -253,7 +253,7 @@ const DetailInsights = await generateDetailedInsight(inputAnalysis,region)
       success: true,
       message: "Analysis completed. 3D model generation started.",
       insights: DetailInsights.insight,
-      model3D: model3DResult,
+      // model3D: model3DResult,
       metadata: {
         category: category.name,
         region,

@@ -1,36 +1,42 @@
 import axios from "axios";
 import { GrokService } from "../services/grok.service.js";
 export const GrokController = {
-  async saveGrokAnalysis(req, res, next) {
-    try {
-      const data = req.body;
+ async saveGrokAnalysis(req, res, next) {
+  try {
+    const data = req.body;
 
-      if (
-        !data.products ||
-        !data.categories ||
-        !data.keywords ||
-        !data.markets ||
-        !data.summary
-      ) {
-        return res.status(400).json({ message: "Invalid data structure" });
-      }
 
-      const insight = await GrokService.CreateAnalysis({
-        products: data.products,
-        categories: data.categories,
-        keywords: data.keywords,
-        markets: data.markets,
-        summary: data.summary,
+    const missing = [];
+    if (!data?.products) missing.push("products");
+    if (!data?.categories) missing.push("categories");
+    if (!data?.keywords) missing.push("keywords");
+    if (!data?.markets) missing.push("markets");
+    if (!data?.summary) missing.push("summary");
+
+    // V2 required fields
+    if (!data?.platforms) missing.push("platforms");
+    if (!data?.sentiment) missing.push("sentiment");
+    if (!data?.assumptions_global) missing.push("assumptions_global");
+
+    if (missing.length > 0) {
+      return res.status(400).json({
+        message: "Invalid data structure",
+        missing,
       });
-
-      return res
-        .status(201)
-        .json({ message: "Grok insights saved successfully", insight });
-    } catch (err) {
-      console.error("Error saving Grok insights:", err);
-      next(err);
     }
-  },
+    console.log(data)
+
+    const insight = await GrokService.CreateAnalysis(data);
+
+    return res
+      .status(201)
+      .json({ message: "Grok insights saved successfully", insight });
+  } catch (err) {
+    console.error("Error saving Grok insights:", err);
+    next(err);
+  }
+},
+
 
   async getLatestInsights(_req, res, next) {
     try {

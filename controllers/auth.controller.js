@@ -440,6 +440,26 @@ export const googleCallback = (req, res, next) => {
   })(req, res, next);
 };
 
+export const logout = async (req, res, next) => {
+  try {
+    const clearOptions = {
+      httpOnly: true,
+      secure: env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+    };
+
+    res.clearCookie("accessToken", clearOptions);
+    res.clearCookie("refreshToken", clearOptions);
+    res.clearCookie("g_state", clearOptions);
+    res.clearCookie("g_pkce", clearOptions);
+
+    res.json(new ApiResponse(200, null, "Logged out successfully"));
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const getProfile = async (req, res, next) => {
   try {
     const user = await userService.findById(req.user.id);
@@ -477,26 +497,6 @@ export const getProfile = async (req, res, next) => {
     );
   } catch (error) {
     console.error("Error fetching profile:", error);
-    next(error);
-  }
-};
-
-export const logout = async (req, res, next) => {
-  try {
-    const clearOptions = {
-      httpOnly: true,
-      secure: env.NODE_ENV === "production",
-      sameSite: "lax",
-      path: "/",
-    };
-
-    res.clearCookie("accessToken", clearOptions);
-    res.clearCookie("refreshToken", clearOptions);
-    res.clearCookie("g_state", clearOptions);
-    res.clearCookie("g_pkce", clearOptions);
-
-    res.json(new ApiResponse(200, null, "Logged out successfully"));
-  } catch (error) {
     next(error);
   }
 };
