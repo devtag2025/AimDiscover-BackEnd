@@ -29,7 +29,7 @@ const createPayload = {
   mode: "preview",
   prompt: meshyPrompt,
   art_style: artStyle || "realistic",
-  ai_model: "latest",        // let it use Meshy 6 Preview
+  ai_model: "meshy-4",        // let it use Meshy 6 Preview
   should_remesh: true,       // cleaner topology at target_polycount
   topology: "triangle",      // or omit and use default
   target_polycount: 300000,   // or a bit higher, but not 200k
