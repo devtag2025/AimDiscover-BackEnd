@@ -20,12 +20,11 @@ import { log } from "console";
 import passport from "../config/passport.config.js";
 const isProduction = env.NODE_ENV === "production";
 
-
 // Helper to set auth tokens
 const setAuthTokens = (res, user) => {
   const accessToken = userService.generateAccessToken(user);
   const refreshToken = userService.generateRefreshToken(user);
-console.log(isProduction , "Is production" , !!isProduction);
+  console.log(isProduction, "Is production", !!isProduction);
   res.cookie("accessToken", accessToken, {
     httpOnly: false,
     secure: isProduction ? true : false, // only true in prod
@@ -142,15 +141,15 @@ export const signup = async (req, res, next) => {
 
 export const login = async (req, res, next) => {
   try {
-   const { email, password } = req.body;
+    const { email, password } = req.body;
 
     if (!email || !password) {
       return res
         .status(400)
         .json(new ApiResponse(400, null, "Email and password required"));
     }
-console.log(isProduction , "Is production" , !!isProduction);
-console.log("Are you winning Son")
+    console.log(isProduction, "Is production", !!isProduction);
+    console.log("Are you winning Son");
     const user = await userService.findByEmail(email);
     if (!user || !user.password) {
       return res
@@ -504,10 +503,21 @@ export const getProfile = async (req, res, next) => {
 export const updateProfile = async (req, res, next) => {
   try {
     const { name, email } = req.body;
+
+    const updates = {};
+
+    if (name && name.trim() && name.trim().length >= 2) {
+      updates.name = name.trim();
+    }
+
+    if (email && email.trim()) {
+      updates.email = email.trim();
+    }
+
     const user = await userService.findById(req.user.id);
 
-    if (email && email !== user.email) {
-      const existingUser = await userService.findByEmail(email);
+    if (updates.email && updates.email !== user.email) {
+      const existingUser = await userService.findByEmail(updates.email);
       if (existingUser) {
         return res
           .status(400)
@@ -515,19 +525,17 @@ export const updateProfile = async (req, res, next) => {
       }
     }
 
-    const updates = {};
-    if (name) updates.name = name;
-    if (email) updates.email = email;
-
     const updatedUser = await userService.update(user.id, updates);
     const { password, refresh_token_enc, ...userResponse } = updatedUser;
 
-    res.json(new ApiResponse(200, userResponse, "Profile updated"));
+    res.json(
+      new ApiResponse(200, userResponse, "Profile updated successfully")
+    );
   } catch (error) {
+    console.error("❌ [Backend] Error:", error);
     next(error);
   }
 };
-
 export const changePassword = async (req, res, next) => {
   try {
     const { currentPassword, newPassword } = req.body;
@@ -742,16 +750,14 @@ export const updateUser = async (req, res, next) => {
       is_email_verified,
     });
     console.log("updated User", updatedUser);
-      
-      if (!updatedUser) throw new ApiError(404, "User not found");
 
-      return res
-        .status(200)
-        .json(new ApiResponse(200, updatedUser, "User updated successfully"));
-    
+    if (!updatedUser) throw new ApiError(404, "User not found");
 
+    return res
+      .status(200)
+      .json(new ApiResponse(200, updatedUser, "User updated successfully"));
   } catch (error) {
-     console.error(" Error updating User:", error);
-      next(error);
+    console.error(" Error updating User:", error);
+    next(error);
   }
 };

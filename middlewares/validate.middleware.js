@@ -89,11 +89,10 @@ const resendVerification = validateRequest(Joi.object({ email }));
 
 const updateProfile = validateRequest(
   Joi.object({
-    name: Joi.string(),
-    email: Joi.string().email(),
-  }).or('name', 'email')
+    name: Joi.string().trim().min(2).optional().allow('', null),
+    email: Joi.string().email().optional().allow('', null),
+  })
 );
-
 
 const changePassword = validateRequest(
   Joi.object({
