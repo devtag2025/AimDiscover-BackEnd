@@ -253,7 +253,7 @@ const DetailInsights = await generateDetailedInsight(inputAnalysis,region,cogs)
       success: true,
       message: "Analysis completed. 3D model generation started.",
       insights: DetailInsights.insight,
-      // model3D: model3DResult,
+      model3D: model3DResult,
       metadata: {
         category: category.name,
         region,
