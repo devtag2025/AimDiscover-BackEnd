@@ -183,23 +183,66 @@ export async function get3DModelStatus(req, res) {
 
 export async function analyzeCategory(req, res) {
   try {
-    const { categoryId, region, productName, artStyle = "realistic", cogs } = req.body;
+    const { 
+      categoryId, 
+      productName, 
+      artStyle = "realistic",
+      
+      // Product & Niche
+      productType,
+      sizeConstraint,
+      gatedPreference,
+      seasonality,
+      
+      // Financials
+      maxCogs,
+      minRetailPrice,
+      minMargin,
+      maxStartup,
+      maxCAC,
+      minCLV,
+      
+      // Market & Demand
+      region,
+      minMarketSize,
+      minGrowth,
+      minSearchVolume,
+      minVirality,
+      platformFocus,
+      
+      // Competition
+      maxCompetition,
+      maxAmazonListings,
+      maxDTCBrands,
+      
+      // Supply Chain
+      maxMOQ,
+      maxLeadTime,
+      supplierCerts,
+      
+      // Other
+      numberOfProducts,
+      riskTolerance,
+      outputDetail
+    } = req.body;
 
     console.log("\n🎯 === NEW ANALYSIS REQUEST ===");
     console.log("📦 Category ID:", categoryId);
-    console.log("🌍 Region:", region);
+    console.log("🌍 Region:", region || "Default");
     console.log("🏷️ Product Name:", productName || "Not specified");
     console.log("🎨 Art Style:", artStyle);
+    console.log("💰 Max COGS:", maxCogs || "Default");
 
-    if (!categoryId || !region ||!cogs) {
-      console.error("❌ Missing required fields");
+    // Validate only the truly required field
+    if (!categoryId) {
+      console.error("❌ Missing required field: categoryId");
       return res.status(400).json({
         success: false,
-        message: "Category ID and region are required",
+        message: "Category selection is required",
       });
     }
 
-    // Get category details
+    // Get category details from database
     console.log("🔍 Fetching category from database...");
     const [category] = await db
       .select()
@@ -217,8 +260,64 @@ export async function analyzeCategory(req, res) {
 
     console.log("✅ Category found:", category.name);
 
+    // Build analysis parameters with defaults for any missing values
+    const analysisParams = {
+      // Product & Niche
+      category: category.name,
+      productType: productType || "Non-Electronic Only",
+      sizeConstraint: sizeConstraint || "Small (under 12×9×6 inches, <2 lbs)",
+      gatedPreference: gatedPreference || "Avoid All Gated",
+      seasonality: seasonality || "Evergreen",
+      
+      // Financials (with fallback defaults)
+      maxCogs: maxCogs !== undefined && maxCogs !== null ? maxCogs : 7,
+      minRetailPrice: minRetailPrice !== undefined && minRetailPrice !== null ? minRetailPrice : 30,
+      minMargin: minMargin !== undefined && minMargin !== null ? minMargin : 70,
+      maxStartup: maxStartup !== undefined && maxStartup !== null ? maxStartup : 15000,
+      maxCAC: maxCAC !== undefined && maxCAC !== null ? maxCAC : 8,
+      minCLV: minCLV !== undefined && minCLV !== null ? minCLV : 100,
+      
+      // Market & Demand
+      region: region || "North America",
+      minMarketSize: minMarketSize !== undefined && minMarketSize !== null ? minMarketSize : 200,
+      minGrowth: minGrowth !== undefined && minGrowth !== null ? minGrowth : 20,
+      minSearchVolume: minSearchVolume !== undefined && minSearchVolume !== null ? minSearchVolume : 15000,
+      minVirality: minVirality !== undefined && minVirality !== null ? minVirality : 750000,
+      platformFocus: platformFocus || "All Platforms",
+      
+      // Competition
+      maxCompetition: maxCompetition !== undefined && maxCompetition !== null ? maxCompetition : 35,
+      maxAmazonListings: maxAmazonListings !== undefined && maxAmazonListings !== null ? maxAmazonListings : 75,
+      maxDTCBrands: maxDTCBrands !== undefined && maxDTCBrands !== null ? maxDTCBrands : 50,
+      
+      // Supply Chain
+      maxMOQ: maxMOQ !== undefined && maxMOQ !== null ? maxMOQ : 300,
+      maxLeadTime: maxLeadTime !== undefined && maxLeadTime !== null ? maxLeadTime : 6,
+      supplierCerts: supplierCerts || "Basic (ISO/BSCI)",
+      
+      // Other
+      numberOfProducts: numberOfProducts !== undefined && numberOfProducts !== null ? numberOfProducts : 3,
+      riskTolerance: riskTolerance || "Low",
+      outputDetail: outputDetail || "Detailed"
+    };
+
+    console.log("\n🔧 === APPLIED ANALYSIS PARAMETERS ===");
+    console.log("Category:", analysisParams.category);
+    console.log("Region:", analysisParams.region);
+    console.log("Max COGS: $" + analysisParams.maxCogs);
+    console.log("Min Retail Price: $" + analysisParams.minRetailPrice);
+    console.log("Min Margin:", analysisParams.minMargin + "%");
+    console.log("Number of Products:", analysisParams.numberOfProducts);
+    console.log("Risk Tolerance:", analysisParams.riskTolerance);
+    console.log("Output Detail:", analysisParams.outputDetail);
+
     // Step 1: Get AI analysis from Grok
-    const grokResult = await analyzeWithGrok(category.name, region, productName);
+    console.log("\n📊 Step 1: Generating Grok analysis...");
+    const grokResult = await analyzeWithGrok(
+      category.name, 
+      analysisParams.region, 
+      productName
+    );
 
     if (!grokResult.success) {
       console.error("❌ Grok analysis failed");
@@ -228,38 +327,53 @@ export async function analyzeCategory(req, res) {
       });
     }
 
-    //  Step 2: Generate 3D model with Meshy
+    console.log("✅ Grok analysis completed");
+
+    // Step 2: Generate 3D model with Meshy
+    console.log("\n🎨 Step 2: Generating 3D model...");
     const model3DResult = await generate3DModelWithMeshy(
       grokResult.analysis,
       artStyle
     );
 
-    console.log("\n✅ === ANALYSIS COMPLETE ===");
-    console.log("📊 Grok analysis:", grokResult.success ? "✓" : "✗");
-    console.log("🎨 3D model task:", model3DResult.success ? "✓" : "✗");
-    console.log("🆔 Task ID:", model3DResult.taskId);
+    console.log("✅ 3D model task initiated");
+    console.log("🆔 Task ID:", model3DResult.taskId || model3DResult.id);
 
-    // Our 3rd step i guess which will take the grok shortened text and create some detailed analysis for the user
+    // Step 3: Generate detailed insights with all parameters
+    console.log("\n📝 Step 3: Generating detailed insights...");
+    const inputAnalysis = grokResult.analysis;
 
-    const inputAnalysis = grokResult.analysis
+    const detailInsights = await generateDetailedInsight(
+      inputAnalysis, 
+      analysisParams
+    );
 
-const DetailInsights = await generateDetailedInsight(inputAnalysis,region,cogs)
+    console.log("✅ Detailed insights generated");
+    console.log("📏 Insight length:", detailInsights.insight?.length || 0, "characters");
+    console.log("🤖 Model used:", detailInsights.model);
 
+    console.log("\n🎉 === ANALYSIS COMPLETE ===");
 
-   
-
-    // Return response immediately
+    // Return response
     return res.status(200).json({
       success: true,
       message: "Analysis completed. 3D model generation started.",
-      insights: DetailInsights.insight,
+      insights: detailInsights.insight,
+      appliedConstraints: analysisParams,
       model3D: model3DResult,
       metadata: {
         category: category.name,
-        region,
+        region: analysisParams.region,
         productName: productName || category.name,
         timestamp: new Date().toISOString(),
         grokModel: grokResult.model,
+        parameters: {
+          maxCogs: analysisParams.maxCogs,
+          minRetailPrice: analysisParams.minRetailPrice,
+          minMargin: analysisParams.minMargin,
+          numberOfProducts: analysisParams.numberOfProducts,
+          outputDetail: analysisParams.outputDetail,
+        }
       },
     });
 
@@ -275,4 +389,3 @@ const DetailInsights = await generateDetailedInsight(inputAnalysis,region,cogs)
     });
   }
 }
-
