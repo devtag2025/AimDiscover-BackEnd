@@ -311,7 +311,6 @@ export async function analyzeCategory(req, res) {
     console.log("Risk Tolerance:", analysisParams.riskTolerance);
     console.log("Output Detail:", analysisParams.outputDetail);
 
-    // Step 1: Get AI analysis from Grok
     console.log("\n📊 Step 1: Generating Grok analysis...");
     const grokResult = await analyzeWithGrok(
       category.name, 

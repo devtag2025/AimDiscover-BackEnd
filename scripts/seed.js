@@ -1,5 +1,5 @@
 import { drizzle } from "drizzle-orm/node-postgres";
-import { users } from "../schema/users.js"; // adjust path if needed
+import { users } from "../schema/users.js"; 
 import { createId } from "@paralleldrive/cuid2";
 import { hash } from "bcryptjs";
 import pkg from "pg";
@@ -17,18 +17,16 @@ async function seedUsers() {
     await client.connect();
     console.log("🌱 Starting user seed...");
 
-    // 1️⃣ Hash passwords
     const adminPassword = await hash("admin123", 10);
     const userPassword = await hash("user123456", 10);
 
-    // 2️⃣ Define users
     const userSeedData = [
       {
         id: createId(),
         email: "admin@example.com",
         name: "System Admin",
         google_id: null,
-        picture: "https://i.pravatar.cc/150?img=1",
+        picture: "https://www.pexels.com/photo/person-holding-camera-1704488",
         user_type: "admin",
         password: adminPassword,
         is_email_verified: true,
@@ -40,6 +38,16 @@ async function seedUsers() {
         google_id: null,
         picture: "https://i.pravatar.cc/150?img=2",
         user_type: "user",
+        password: userPassword,
+        is_email_verified: true,
+      },
+         {
+        id: createId(),
+        email: "hassanabbas05674@gmail.com",
+        name: "Hassan Abbas",
+        google_id: null,
+        picture: "https://www.pexels.com/photo/person-holding-camera-1704488",
+        user_type: "admin",
         password: userPassword,
         is_email_verified: true,
       },
@@ -85,7 +93,6 @@ async function seedUsers() {
       },
     ];
 
-    // 3️⃣ Insert users (ignore if email exists)
     for (const u of userSeedData) {
       await db
         .insert(users)

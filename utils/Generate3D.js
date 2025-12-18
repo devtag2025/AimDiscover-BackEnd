@@ -13,23 +13,13 @@ async function generate3DModelWithMeshy(productDescription, artStyle = "realisti
     console.log("📝 Shortened prompt length:", meshyPrompt.length);
     console.log("💬 Meshy prompt:", meshyPrompt);
 
-//     const createPayload = {
-//   mode: "preview",
-//   prompt: meshyPrompt,
-//   art_style: artStyle || "realistic",
-//   ai_model: "meshy-5",
-//   topology: "quad",                 
-//   target_polycount: 200000,         
-//   should_remesh: false,
-//   symmetry_mode: "off",             
-//   webhook_url: `${env.NGROK_SERVER}/api/v1/webhook/meshy`,
-// };/
+
 
 const createPayload = {
   mode: "preview",
   prompt: meshyPrompt,
   art_style: artStyle || "realistic",
-  ai_model: "meshy-5",        // let it use Meshy 6 Preview
+  ai_model: "latest",        // let it use Meshy 6 Preview
   should_remesh: true,       // cleaner topology at target_polycount
   topology: "triangle",      // or omit and use default
   target_polycount: 300000,   // or a bit higher, but not 200k
@@ -68,7 +58,6 @@ const createPayload = {
     console.log("🆔 Preview Task ID:", previewTaskId);
     console.log("🔔 Webhook will notify when preview completes");
 
-    // 💾 Store task in database
     const newTask = await db.insert(meshyTasks).values({
       id: createId(),
       previewTaskId: previewTaskId,
