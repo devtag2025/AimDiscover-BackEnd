@@ -388,3 +388,248 @@ export async function analyzeCategory(req, res) {
     });
   }
 }
+
+export async function analyzeInsightsOnly(req, res) {
+  try {
+    const { 
+      categoryId, 
+      productName, 
+      refinementContext,  // ← NEW: Optional refinement context
+      artStyle = "realistic",
+      
+      // Product & Niche
+      productType,
+      sizeConstraint,
+      gatedPreference,
+      seasonality,
+      
+      // Financials
+      maxCogs,
+      minRetailPrice,
+      minMargin,
+      maxStartup,
+      maxCAC,
+      minCLV,
+      
+      // Market & Demand
+      region,
+      minMarketSize,
+      minGrowth,
+      minSearchVolume,
+      minVirality,
+      platformFocus,
+      
+      // Competition
+      maxCompetition,
+      maxAmazonListings,
+      maxDTCBrands,
+      
+      // Supply Chain
+      maxMOQ,
+      maxLeadTime,
+      supplierCerts,
+      
+      // Other
+      numberOfProducts,
+      riskTolerance,
+      outputDetail
+    } = req.body;
+
+    console.log("\n🎯 === INSIGHTS-ONLY ANALYSIS REQUEST ===");
+    console.log("📦 Category ID:", categoryId);
+    console.log("🌍 Region:", region || "North America (default)");
+    console.log("💬 Refinement Context:", refinementContext ? "Provided" : "None");
+
+    // Validate category exists
+    const category = await db.query.categories.findFirst({
+      where: eq(categories.id, categoryId),
+    });
+
+    if (!category) {
+      return res.status(404).json({
+        success: false,
+        message: "Category not found",
+      });
+    }
+
+    // Build analysis parameters with defaults
+    const analysisParams = {
+      category: category.name,
+      
+      // Product & Niche
+      productType: productType || "Non-Electronic Only",
+      sizeConstraint: sizeConstraint || "Small (under 12×9×6 inches, <2 lbs)",
+      gatedPreference: gatedPreference || "Avoid All Gated",
+      seasonality: seasonality || "Evergreen",
+      
+      // Financials
+      maxCogs: maxCogs !== undefined && maxCogs !== null ? maxCogs : 7,
+      minRetailPrice: minRetailPrice !== undefined && minRetailPrice !== null ? minRetailPrice : 30,
+      minMargin: minMargin !== undefined && minMargin !== null ? minMargin : 70,
+      maxStartup: maxStartup !== undefined && maxStartup !== null ? maxStartup : 15000,
+      maxCAC: maxCAC !== undefined && maxCAC !== null ? maxCAC : 8,
+      minCLV: minCLV !== undefined && minCLV !== null ? minCLV : 100,
+      
+      // Market & Demand
+      region: region || "North America",
+      minMarketSize: minMarketSize !== undefined && minMarketSize !== null ? minMarketSize : 200,
+      minGrowth: minGrowth !== undefined && minGrowth !== null ? minGrowth : 20,
+      minSearchVolume: minSearchVolume !== undefined && minSearchVolume !== null ? minSearchVolume : 15000,
+      minVirality: minVirality !== undefined && minVirality !== null ? minVirality : 750000,
+      platformFocus: platformFocus || "All Platforms",
+      
+      // Competition
+      maxCompetition: maxCompetition !== undefined && maxCompetition !== null ? maxCompetition : 35,
+      maxAmazonListings: maxAmazonListings !== undefined && maxAmazonListings !== null ? maxAmazonListings : 75,
+      maxDTCBrands: maxDTCBrands !== undefined && maxDTCBrands !== null ? maxDTCBrands : 50,
+      
+      // Supply Chain
+      maxMOQ: maxMOQ !== undefined && maxMOQ !== null ? maxMOQ : 300,
+      maxLeadTime: maxLeadTime !== undefined && maxLeadTime !== null ? maxLeadTime : 6,
+      supplierCerts: supplierCerts || "Basic (ISO/BSCI)",
+      
+      // Other
+      numberOfProducts: numberOfProducts !== undefined && numberOfProducts !== null ? numberOfProducts : 3,
+      riskTolerance: riskTolerance || "Low",
+      outputDetail: outputDetail || "Detailed"
+    };
+
+    console.log("\n🔧 === APPLIED PARAMETERS ===");
+    console.log("Category:", analysisParams.category);
+    console.log("Region:", analysisParams.region);
+    console.log("Max COGS: $" + analysisParams.maxCogs);
+    console.log("Number of Products:", analysisParams.numberOfProducts);
+
+    // Step 1: Get AI analysis from Grok (with optional refinement context)
+    console.log("\n📊 Step 1: Generating Grok analysis...");
+    const grokResult = await analyzeWithGrok(
+      category.name, 
+      analysisParams.region, 
+      productName,
+      refinementContext  // ← PASS REFINEMENT CONTEXT (can be undefined/null)
+    );
+
+    if (!grokResult.success) {
+      console.error("❌ Grok analysis failed");
+      return res.status(500).json({
+        success: false,
+        message: "Failed to generate analysis",
+      });
+    }
+
+    console.log("✅ Grok analysis completed");
+    console.log("📝 Mesh prompt length:", grokResult.analysis?.length || 0);
+
+    // Step 2: Generate detailed insights (with optional refinement context)
+    console.log("\n📝 Step 2: Generating detailed insights...");
+    const detailInsights = await generateDetailedInsight(
+      grokResult.analysis, 
+      analysisParams,
+      refinementContext  // ← PASS REFINEMENT CONTEXT (can be undefined/null)
+    );
+
+    console.log("✅ Detailed insights generated");
+    console.log("📏 Insight length:", detailInsights.insight?.length || 0, "characters");
+
+    console.log("\n🎉 === INSIGHTS GENERATION COMPLETE ===");
+
+    // Return response WITHOUT 3D model generation
+    return res.status(200).json({
+      success: true,
+      message: "Insights generated successfully. You can now optionally generate a 3D model.",
+      insights: detailInsights.insight,
+      meshPrompt: grokResult.analysis,           // Save for potential 3D generation
+      productDescription: grokResult.description,
+      appliedConstraints: analysisParams,
+      metadata: {
+        category: category.name,
+        region: analysisParams.region,
+        productName: productName || category.name,
+        refinementContext: refinementContext || null,  // Include in metadata
+        timestamp: new Date().toISOString(),
+        grokModel: grokResult.model,
+        parameters: {
+          maxCogs: analysisParams.maxCogs,
+          minRetailPrice: analysisParams.minRetailPrice,
+          minMargin: analysisParams.minMargin,
+          numberOfProducts: analysisParams.numberOfProducts,
+          outputDetail: analysisParams.outputDetail,
+        }
+      },
+    });
+
+  } catch (error) {
+    console.error("\n❌ === INSIGHTS GENERATION ERROR ===");
+    console.error("Message:", error.message);
+    console.error("Stack:", error.stack);
+    
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error during insights generation",
+      error: error.message,
+    });
+  }
+}
+
+export async function generate3DFromPrompt(req, res) {
+  try {
+    const { meshPrompt, artStyle = "realistic" } = req.body;
+
+    console.log("\n🎨 === STANDALONE 3D GENERATION REQUEST ===");
+    console.log("📝 Mesh Prompt Length:", meshPrompt?.length || 0);
+    console.log("🎭 Art Style:", artStyle);
+
+    // Validation
+    if (!meshPrompt || typeof meshPrompt !== 'string' || meshPrompt.trim().length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "meshPrompt is required and must be a non-empty string",
+      });
+    }
+
+    if (meshPrompt.length > 500) {
+      return res.status(400).json({
+        success: false,
+        message: "meshPrompt is too long (max 500 characters)",
+      });
+    }
+
+    // Generate 3D model
+    console.log("\n🎨 Initiating 3D model generation...");
+    const model3DResult = await generate3DModelWithMeshy(meshPrompt, artStyle);
+
+    if (!model3DResult.success) {
+      console.error("❌ 3D generation failed:", model3DResult.error);
+      return res.status(500).json({
+        success: false,
+        message: "Failed to initiate 3D model generation",
+        error: model3DResult.error,
+      });
+    }
+
+    console.log("✅ 3D model task initiated successfully");
+    console.log("🆔 Task ID:", model3DResult.id || model3DResult.previewTaskId);
+
+    return res.status(200).json({
+      success: true,
+      message: "3D model generation started. Use the task ID to poll for status.",
+      model3D: model3DResult,
+      polling: {
+        endpoint: `/api/v1/analysis/3d-status/${model3DResult.id || model3DResult.previewTaskId}`,
+        intervalSeconds: 15,
+        maxAttempts: 60
+      }
+    });
+
+  } catch (error) {
+    console.error("\n❌ === 3D GENERATION ERROR ===");
+    console.error("Message:", error.message);
+    console.error("Stack:", error.stack);
+    
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error during 3D generation",
+      error: error.message,
+    });
+  }
+}
