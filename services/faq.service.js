@@ -45,9 +45,6 @@ export class FaqSerivce {
   return rows;
 }
 
-
-// faq.service.js
-
 static async createFaqEntry({
   category,
   question,

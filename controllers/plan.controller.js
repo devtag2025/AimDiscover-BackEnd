@@ -6,13 +6,20 @@ import { ApiResponse } from '../utils/index.js';
 
 export const getPlans = async (req, res, next) => {
   try {
-    const activeOnly = req.query.active === 'true';
-    const plans = await planService.getPlans(activeOnly);
+    const {page, status = "active", search = "" } = req.query;
+
+    const plans = await planService.getPlans({
+      page,
+      search, // "active" | "inactive" | "all"
+      status,
+    });
+
     res.json(new ApiResponse(200, plans, "Plans retrieved successfully"));
   } catch (error) {
     next(error);
   }
 };
+
 
 export const getPlanById = async (req, res, next) => {
   try {

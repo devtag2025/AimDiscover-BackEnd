@@ -2,7 +2,12 @@ import Joi from "joi";
 
 // Helper function to validate request body
 const validateRequest = (schema) => (req, res, next) => {
-  const { error } = schema.validate(req.body);
+  const { error, value } = schema.validate(req.body, {
+    abortEarly: true,
+    allowUnknown: false,
+    stripUnknown: true,
+  });
+
   if (error) {
     return res.status(400).json({
       success: false,
@@ -10,9 +15,10 @@ const validateRequest = (schema) => (req, res, next) => {
       error: error.details[0].message,
     });
   }
+
+  req.body = value; // sanitized
   next();
 };
-
 // Helper function to validate params
 const validateParams = (schema) => (req, res, next) => {
   const { error } = schema.validate(req.params);
@@ -98,8 +104,10 @@ const changePassword = validateRequest(
   Joi.object({
     currentPassword: Joi.string().required(),
     newPassword: password,
+    confirmPassword: confirmPassword("newPassword"),
   })
 );
+
 
 // Plan validations
 const createPlan = validateRequest(
@@ -149,7 +157,11 @@ const planId = validateParams(
 
 const getPlans = validateQuery(
   Joi.object({
-    active: Joi.boolean().optional(),
+  
+    search: Joi.string().empty('').optional(), 
+    status: Joi.string().optional(),
+    page:Joi.number().optional()
+
   })
 );
 

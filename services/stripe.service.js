@@ -6,6 +6,8 @@ import { eq } from "drizzle-orm";
 import { env } from "../config/env.config.js";
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
+console.log(env.STRIPE_WEBHOOK_SECRET,"This is the stripe secret",!!env.STRIPE_WEBHOOK_SECRET);
+
 
 class StripeService {
   async createCheckout(userId, planId) {
@@ -19,12 +21,12 @@ class StripeService {
       payment_method_types: ["card"],
       line_items: [
         {
-          price: plan.stripe_price_id, // Price ID created when you made the plan
+          price: plan.stripe_price_id, 
           quantity: 1,
         },
       ],
-      success_url: `${env.CLIENT_URL}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${env.CLIENT_URL}/payment-cancelled`,
+      success_url: `${env.CLIENT_URL}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${env.CLIENT_URL}/payment/cancelled`,
       metadata: {
         user_id: userId,
         plan_id: planId,
@@ -39,52 +41,55 @@ class StripeService {
     let event;
     try {
       event = stripe.webhooks.constructEvent(rawBody, signature, env.STRIPE_WEBHOOK_SECRET);
+      console.log("This is the event ",event,!!event);
     } catch (err) {
       console.error("Webhook signature verification failed:", err.message);
       throw new Error("Invalid webhook signature");
     }
 
-    //  Handle important events
     switch (event.type) {
       //  Checkout completed → create subscription record
-      case "checkout.session.completed": {
-        const session = event.data.object;
-        const { user_id, plan_id } = session.metadata;
+     case "checkout.session.completed": {
+  const session = event.data.object;
 
-        if (!session.customer) {
-          console.warn("No customer ID found in checkout.session.completed event.");
-          break;
-        }
+  const metadata = session.metadata || {};
+  const userId = metadata.user_id;
+  const planId = metadata.plan_id;
 
-        // For subscriptions (not one-time)
-        const stripeSubId = session.subscription || null;
-        let stripeSub;
-        if (stripeSubId) {
-          stripeSub = await stripe.subscriptions.retrieve(stripeSubId);
-        }
+  if (!userId || !planId) {
+    console.warn("Missing metadata", metadata);
+    break;
+  }
 
-        // Save subscription in DB
-        await db.insert(subscriptions).values({
-          id: createId(),
-          user_id,
-          plan_id,
-          stripe_customer_id: session.customer,
-          stripe_subscription_id: stripeSub?.id || null,
-          stripe_payment_intent_id: session.payment_intent || null,
-          status: stripeSub?.status || "active",
-          current_period_start: stripeSub?.current_period_start
-            ? new Date(stripeSub.current_period_start * 1000)
-            : new Date(),
-          current_period_end: stripeSub?.current_period_end
-            ? new Date(stripeSub.current_period_end * 1000)
-            : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-          trial_end: stripeSub?.trial_end ? new Date(stripeSub.trial_end * 1000) : null,
-          cancel_at_period_end: stripeSub?.cancel_at_period_end ?? false,
-        });
+  const stripeSubId = session.subscription ?? null;
+  const stripeSub = stripeSubId
+    ? await stripe.subscriptions.retrieve(stripeSubId)
+    : null;
 
-        console.log(" Subscription created for user:", user_id);
-        break;
-      }
+  await db.insert(subscriptions).values({
+    id: createId(),
+    user_id: userId,
+    plan_id: planId,
+    stripe_customer_id: session.customer,
+    stripe_subscription_id: stripeSub?.id ?? null,
+    stripe_payment_intent_id: session.payment_intent ?? null,
+    status: stripeSub?.status ?? "active",
+    current_period_start: stripeSub?.current_period_start
+      ? new Date(stripeSub.current_period_start * 1000)
+      : new Date(),
+    current_period_end: stripeSub?.current_period_end
+      ? new Date(stripeSub.current_period_end * 1000)
+      : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    trial_end: stripeSub?.trial_end
+      ? new Date(stripeSub.trial_end * 1000)
+      : null,
+    cancel_at_period_end: stripeSub?.cancel_at_period_end ?? false,
+  });
+
+  console.log("Subscription created for user:", userId);
+  break;
+}
+
 
       //  Payment failed
       case "invoice.payment_failed": {

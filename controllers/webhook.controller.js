@@ -7,7 +7,6 @@ import { eq ,or } from 'drizzle-orm';
 import axios from 'axios';
 import { createId } from '@paralleldrive/cuid2';
 import fetch from 'node-fetch';
-// import { put } from '@vercel/blob'; // or use AWS S3, Cloudinary, etc.
 
 // ===== STRIPE WEBHOOKS =====
 const MESHY_WEBHOOK_SECRET = env.MESHY_WEBHOOK_SECRET;
@@ -15,11 +14,15 @@ console.log("----- MESHY_WEBHOOK_SECRET" , !!MESHY_WEBHOOK_SECRET)
 
 console.log("Client URL",!!env.FRONTEND_URL,env.FRONTEND_URL);
 console.log("FRONTEND URL", !!env.CLIENT_URL,env.CLIENT_URL);
+
+
 export const handleStripeWebhook = async (req, res, next) => {
   try {
     const signature = req.headers['stripe-signature'];
     const rawBody = req.body;
 
+    console.log("Raw body of Stripe",rawBody,!!rawBody);
+    console.log("This is the signature of Stripe",signature,!!signature);
     if (!signature) {
       return res.status(400).json(
         new ApiResponse(400, null, "Missing Stripe signature")
@@ -33,7 +36,6 @@ export const handleStripeWebhook = async (req, res, next) => {
     );
 
   } catch (error) {
-    // Handle signature verification errors
     if (error.message.includes('signature')) {
       return res.status(400).json(
         new ApiResponse(400, null, "Webhook signature verification failed")
@@ -591,7 +593,6 @@ export const handleMeshyWebhook = async (req, res) => {
   try {
     let payload;
 
-    // Handle raw or parsed JSON body
     if (Buffer.isBuffer(req.body)) {
       const rawBody = req.body.toString();
       payload = JSON.parse(rawBody);
@@ -602,7 +603,6 @@ export const handleMeshyWebhook = async (req, res) => {
     console.log("\n=== 🟦 MESHY WEBHOOK RECEIVED ===");
     console.log(JSON.stringify(payload, null, 2));
 
-    // Verify signature (optional but recommended)
     const signature = req.headers["x-meshy-signature"];
     const secret = process.env.MESHY_WEBHOOK_SECRET;
 
@@ -626,13 +626,10 @@ export const handleMeshyWebhook = async (req, res) => {
     console.log(`   Status: ${status}`);
     console.log(`   Progress: ${progress}%`);
 
-    // -----------------------------------
-    // HANDLE PREVIEW TASK
-    // -----------------------------------
+
     if (mode === "preview") {
       console.log("\n🟨 === PREVIEW TASK UPDATE ===");
 
-      // Find task in database
       const existingTask = await db
         .select()
         .from(meshyTasks)
@@ -649,7 +646,6 @@ export const handleMeshyWebhook = async (req, res) => {
 
       const task = existingTask[0];
 
-      // Update preview status
       await db
         .update(meshyTasks)
         .set({
@@ -663,7 +659,6 @@ export const handleMeshyWebhook = async (req, res) => {
 
       console.log(`✅ Database updated for preview task: ${id}`);
 
-      // ✅ PREVIEW SUCCEEDED → Trigger Refine Task
       if (status === "SUCCEEDED") {
         console.log("\n🎉 PREVIEW SUCCEEDED!");
         console.log("🔄 Automatically starting REFINE task...");

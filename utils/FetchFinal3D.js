@@ -18,7 +18,6 @@ export async function fetchFinal3DModel(taskId) {
     const result = await response.json();
     const data = result.data || result;
 
-    // ✅ CRITICAL FIX: Store as plain object (NO JSON.stringify!)
     await db.update(meshyTasks)
       .set({
         status: "SUCCEEDED",

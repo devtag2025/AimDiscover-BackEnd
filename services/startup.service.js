@@ -9,7 +9,6 @@ export class StartupService {
     if (this.#initialized) return;
     this.#initialized = true;
 
-    // Test database connection
     try {
       this.#dbPool = new Pool({ connectionString: process.env.DATABASE_URL || env.DATABASE_URL });
       const result = await this.#dbPool.query('SELECT NOW()');

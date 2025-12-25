@@ -247,7 +247,6 @@ Market: ${region}`
       : `Generate a Meshy text-to-3D prompt and product description for a typical product in: "${categoryName}"
 Market: ${region}`;
 
-    // ← NEW: Add refinement context if provided
     let fullPrompt = basePrompt;
     
     if (refinementContext && refinementContext.trim()) {
@@ -259,7 +258,6 @@ ${refinementContext.trim()}
 IMPORTANT: Please incorporate the user's specific requirements above into your product selection and description. The user has refined their search with these additional criteria.`;
     }
 
-    // Add standard instructions
     const userPrompt = `${fullPrompt}
 
 Remember:

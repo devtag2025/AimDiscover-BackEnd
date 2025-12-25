@@ -74,7 +74,7 @@ class EmailService {
 
 
   passwordResetHTML(resetToken, data = {}) {
-    const resetUrl = `${env.CLIENT_URL}/reset-password?token=${encodeURIComponent(resetToken)}`;
+    const resetUrl = `${env.FRONTEND_URL}/reset-password?token=${encodeURIComponent(resetToken)}`;
     const name = data.userName || "there";
     return `
 <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px">

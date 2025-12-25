@@ -16,7 +16,7 @@ router.use("/plans", planRoutes);
 router.use("/subscriptions", subscriptionRoutes);
 router.use("/categories", categoryRoutes);
 router.use("/analysis", analysisRoutes);
-router.use("/webhook",webhookRoutes);
+// router.use("/webhook",webhookRoutes);
 router.use("/grok",grokRoutes);
 router.use("/support",supportRoutes);
 router.use("/faq",faqRoutes);

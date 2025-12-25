@@ -7,7 +7,7 @@ import rateLimit from "express-rate-limit";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
 // Remove cookieSession import since we're using manual cookies
-import webhookRoutes from "./routes/webhook.route.js";
+import webhookRoutes from "./routes/webhook.route.js"
 import passport from "passport";
 import { notFoundMiddleware, errorHandler } from "./middlewares/index.js";
 import routes from "./routes/index.js";
@@ -16,20 +16,24 @@ import { startGrokCron } from "./jobs/grokCron.js";
 const app = express();
 app.set('trust proxy', 1);
 
-/* --------------------  Optional API docs (dev only) -------------------- */
-if (env.NODE_ENV !== "production") {
-  try {
-    const { initApiDocs } = await import("./docs/init-oas.js");
-    const swaggerUi = (await import("swagger-ui-express")).default;
-    const spec = (await import("./docs/openapi.json", { with: { type: "json" } })).default;
+// /* --------------------  Optional API docs (dev only) -------------------- */
+// if (env.NODE_ENV !== "production") {
+//   try {
+//     const { initApiDocs } = await import("./docs/init-oas.js");
+//     const swaggerUi = (await import("swagger-ui-express")).default;
+//     const spec = (await import("./docs/openapi.json", { with: { type: "json" } })).default;
 
-    initApiDocs(app);
-    app.use("/docs", swaggerUi.serve, swaggerUi.setup(spec));
-    console.log("API docs enabled at /docs");
-  } catch (err) {
-    console.warn("Docs not available:", err.message);
-  }
-}
+//     initApiDocs(app);
+//     app.use("/docs", swaggerUi.serve, swaggerUi.setup(spec));
+//     console.log("API docs enabled at /docs");
+//   } catch (err) {
+//     console.warn("Docs not available:", err.message);
+//   }
+// }
+
+
+app.use("/api/v1/webhook", webhookRoutes);
+
 
 /* --------------------  Security / platform middlewares -------------------- */
 const allowedOrigins = [
@@ -87,7 +91,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/api/v1/webhooks", webhookRoutes);
+
 
 
 /* --------------------  Body parsers -------------------- */

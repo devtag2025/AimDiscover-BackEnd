@@ -5,23 +5,36 @@ import { createId } from "@paralleldrive/cuid2";
 import Stripe from "stripe";
 import { env } from "../config/env.config.js";
 import { eq } from "drizzle-orm";
+import { ilike } from "drizzle-orm";
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 
 export class PlanService {
-  // 🟢 Get all plans
-  async getPlans(activeOnly = false) {
-    try {
-      const query = db.select().from(plans);
-      if (activeOnly) query.where(eq(plans.is_active, true));
-      return await query;
-    } catch (error) {
-      console.error("❌ Failed to fetch plans:", error);
-      throw new Error("Could not fetch plans");
-    }
-  }
+ async getPlans({ status = "active", search = "" } = {}) {
+  try {
+    let query = db.select().from(plans);
 
-  // 🟢 Get single plan by ID
+    if (status === "active") {
+      query = query.where(eq(plans.is_active, true));
+    }
+
+    if (status === "inactive") {
+      query = query.where(eq(plans.is_active, false));
+    }
+
+    if (search && typeof search === "string") {
+      query = query.where(
+        ilike(plans.name, `%${search.replace(/%/g, "\\%")}%`)
+      );
+    }
+
+    return await query;
+  } catch (error) {
+    console.error("❌ Failed to fetch plans:", error);
+    throw new Error("Could not fetch plans");
+  }
+}
+
   async getPlanById(planId) {
     try {
       const [plan] = await db.select().from(plans).where(eq(plans.id, planId));
@@ -33,7 +46,6 @@ export class PlanService {
     }
   }
 
-  // 🟢 Create a new plan (with Stripe)
   async createPlan(data) {
     const {
       name,
@@ -55,7 +67,9 @@ export class PlanService {
 
     try {
       if (!env.STRIPE_SECRET_KEY) {
-        console.warn("⚠️ STRIPE_SECRET_KEY missing — skipping Stripe creation.");
+        console.warn(
+          "⚠️ STRIPE_SECRET_KEY missing — skipping Stripe creation."
+        );
       } else {
         // ✅ Create product on Stripe
         const product = await stripe.products.create({
@@ -115,25 +129,45 @@ export class PlanService {
       throw new Error("Could not create plan");
     }
   }
+async updatePlan(planId, data) {
+  const [plan] = await db.select().from(plans).where(eq(plans.id, planId));
+  if (!plan) throw new Error("Plan not found");
 
-  // 🟢 Update plan
-  async updatePlan(planId, data) {
-    try {
-      const [plan] = await db.select().from(plans).where(eq(plans.id, planId));
-      if (!plan) throw new Error("Plan not found");
-
-      const [updated] = await db
-        .update(plans)
-        .set(data)
-        .where(eq(plans.id, planId))
-        .returning();
-
-      return updated;
-    } catch (error) {
-      console.error("❌ Failed to update plan:", error);
-      throw new Error(error.message || "Could not update plan");
-    }
+  // 🟡 Stripe product update
+  if (plan.stripe_product_id && (data.name || data.description)) {
+    await stripe.products.update(plan.stripe_product_id, {
+      ...(data.name && { name: data.name }),
+      ...(data.description && { description: data.description }),
+    });
   }
+
+  // 🔴 Price change → create NEW Stripe price
+  if (
+    data.price &&
+    data.price !== plan.price
+  ) {
+    const newPrice = await stripe.prices.create({
+      product: plan.stripe_product_id,
+      unit_amount: data.price,
+      currency: plan.currency.toLowerCase(),
+      recurring: plan.billing_period
+        ? { interval: plan.billing_period === "yearly" ? "year" : "month" }
+        : undefined,
+      metadata: { plan_id: plan.id },
+    });
+
+    data.stripe_price_id = newPrice.id;
+  }
+
+  const [updated] = await db
+    .update(plans)
+    .set(data)
+    .where(eq(plans.id, planId))
+    .returning();
+
+  return updated;
+}
+
 
   // 🟢 Delete (deactivate) plan
   async deletePlan(planId) {
