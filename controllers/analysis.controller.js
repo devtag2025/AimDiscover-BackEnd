@@ -348,6 +348,7 @@ export async function analyzeCategory(req, res) {
     );
 
     console.log("✅ Detailed insights generated");
+    console.log(detailInsights.insight);
     console.log("📏 Insight length:", detailInsights.insight?.length || 0, "characters");
     console.log("🤖 Model used:", detailInsights.model);
 
