@@ -1,4 +1,3 @@
-import axios from "axios";
 import { GrokService } from "../services/grok.service.js";
 export const GrokController = {
  async saveGrokAnalysis(req, res, next) {
@@ -12,8 +11,6 @@ export const GrokController = {
     if (!data?.keywords) missing.push("keywords");
     if (!data?.markets) missing.push("markets");
     if (!data?.summary) missing.push("summary");
-
-    // V2 required fields
     if (!data?.platforms) missing.push("platforms");
     if (!data?.sentiment) missing.push("sentiment");
     if (!data?.assumptions_global) missing.push("assumptions_global");

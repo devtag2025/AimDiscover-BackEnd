@@ -25,9 +25,6 @@ export const CategoryController = {
     }
   },
 
-  /**
-   *  Get all categories (with pagination + search)
-   */
   async getAll(req, res, next) {
     console.log("get all categories")
     try {

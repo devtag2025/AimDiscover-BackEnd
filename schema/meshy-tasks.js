@@ -1,4 +1,3 @@
-// schema/meshy-tasks.js
 import { pgTable, text, integer, jsonb, timestamp, varchar } from "drizzle-orm/pg-core";
 
 export const meshyTasks = pgTable("meshy_tasks", {

@@ -187,53 +187,42 @@ export async function analyzeCategory(req, res) {
       categoryId, 
       productName, 
       artStyle = "realistic",
-      
-      // Product & Niche
       productType,
       sizeConstraint,
       gatedPreference,
       seasonality,
-      
-      // Financials
       maxCogs,
       minRetailPrice,
       minMargin,
       maxStartup,
       maxCAC,
       minCLV,
-      
-      // Market & Demand
       region,
       minMarketSize,
       minGrowth,
       minSearchVolume,
       minVirality,
       platformFocus,
-      
-      // Competition
       maxCompetition,
       maxAmazonListings,
       maxDTCBrands,
-      
-      // Supply Chain
       maxMOQ,
       maxLeadTime,
       supplierCerts,
-      
-      // Other
       numberOfProducts,
       riskTolerance,
       outputDetail
     } = req.body;
 
-    console.log("\n🎯 === NEW ANALYSIS REQUEST ===");
-    console.log("📦 Category ID:", categoryId);
-    console.log("🌍 Region:", region || "Default");
-    console.log("🏷️ Product Name:", productName || "Not specified");
-    console.log("🎨 Art Style:", artStyle);
-    console.log("💰 Max COGS:", maxCogs || "Default");
+    // console.log("\n🎯 === NEW ANALYSIS REQUEST ===");
+    // console.log("📦 Category ID:", categoryId);
+    // console.log("🌍 Region:", region || "Default");
+    // console.log("🏷️ Product Name:", productName || "Not specified");
+    // console.log("🎨 Art Style:", artStyle);
+    // console.log("💰 Max COGS:", maxCogs || "Default");
 
     // Validate only the truly required field
+    
     if (!categoryId) {
       console.error("❌ Missing required field: categoryId");
       return res.status(400).json({
@@ -301,17 +290,17 @@ export async function analyzeCategory(req, res) {
       outputDetail: outputDetail || "Detailed"
     };
 
-    console.log("\n🔧 === APPLIED ANALYSIS PARAMETERS ===");
-    console.log("Category:", analysisParams.category);
-    console.log("Region:", analysisParams.region);
-    console.log("Max COGS: $" + analysisParams.maxCogs);
-    console.log("Min Retail Price: $" + analysisParams.minRetailPrice);
-    console.log("Min Margin:", analysisParams.minMargin + "%");
-    console.log("Number of Products:", analysisParams.numberOfProducts);
-    console.log("Risk Tolerance:", analysisParams.riskTolerance);
-    console.log("Output Detail:", analysisParams.outputDetail);
+    // console.log("\n🔧 === APPLIED ANALYSIS PARAMETERS ===");
+    // console.log("Category:", analysisParams.category);
+    // console.log("Region:", analysisParams.region);
+    // console.log("Max COGS: $" + analysisParams.maxCogs);
+    // console.log("Min Retail Price: $" + analysisParams.minRetailPrice);
+    // console.log("Min Margin:", analysisParams.minMargin + "%");
+    // console.log("Number of Products:", analysisParams.numberOfProducts);
+    // console.log("Risk Tolerance:", analysisParams.riskTolerance);
+    // console.log("Output Detail:", analysisParams.outputDetail);
 
-    console.log("\n📊 Step 1: Generating Grok analysis...");
+
     const grokResult = await analyzeWithGrok(
       category.name, 
       analysisParams.region, 
@@ -327,19 +316,17 @@ export async function analyzeCategory(req, res) {
     }
 
     console.log("✅ Grok analysis completed");
-
-    // Step 2: Generate 3D model with Meshy
-    console.log("\n🎨 Step 2: Generating 3D model...");
+;
     const model3DResult = await generate3DModelWithMeshy(
       grokResult.analysis,
       artStyle
     );
 
-    console.log("✅ 3D model task initiated");
-    console.log("🆔 Task ID:", model3DResult.taskId || model3DResult.id);
+    // console.log("✅ 3D model task initiated");
+    // console.log("🆔 Task ID:", model3DResult.taskId || model3DResult.id);
+    // console.log("\n📝 Step 3: Generating detailed insights...");
 
-    // Step 3: Generate detailed insights with all parameters
-    console.log("\n📝 Step 3: Generating detailed insights...");
+
     const inputAnalysis = grokResult.analysis;
 
     const detailInsights = await generateDetailedInsight(
@@ -347,14 +334,13 @@ export async function analyzeCategory(req, res) {
       analysisParams
     );
 
-    console.log("✅ Detailed insights generated");
-    console.log(detailInsights.insight);
-    console.log("📏 Insight length:", detailInsights.insight?.length || 0, "characters");
-    console.log("🤖 Model used:", detailInsights.model);
+    // console.log("✅ Detailed insights generated");
+    // console.log(detailInsights.insight);
+    // console.log("📏 Insight length:", detailInsights.insight?.length || 0, "characters");
+    // console.log("🤖 Model used:", detailInsights.model);
+    // console.log("\n🎉 === ANALYSIS COMPLETE ===");
 
-    console.log("\n🎉 === ANALYSIS COMPLETE ===");
 
-    // Return response
     return res.status(200).json({
       success: true,
       message: "Analysis completed. 3D model generation started.",
@@ -507,7 +493,7 @@ export async function analyzeInsightsOnly(req, res) {
       category.name, 
       analysisParams.region, 
       productName,
-      refinementContext  // ← PASS REFINEMENT CONTEXT (can be undefined/null)
+      refinementContext  
     );
 
     if (!grokResult.success) {
@@ -539,14 +525,14 @@ export async function analyzeInsightsOnly(req, res) {
       success: true,
       message: "Insights generated successfully. You can now optionally generate a 3D model.",
       insights: detailInsights.insight,
-      meshPrompt: grokResult.analysis,           // Save for potential 3D generation
+      meshPrompt: grokResult.analysis,           
       productDescription: grokResult.description,
       appliedConstraints: analysisParams,
       metadata: {
         category: category.name,
         region: analysisParams.region,
         productName: productName || category.name,
-        refinementContext: refinementContext || null,  // Include in metadata
+        refinementContext: refinementContext || null,  
         timestamp: new Date().toISOString(),
         grokModel: grokResult.model,
         parameters: {

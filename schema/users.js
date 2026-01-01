@@ -8,8 +8,6 @@ export const users = pgTable("users", {
   google_id: varchar("google_id", { length: 255 }),
   picture: text("picture"),
   user_type: varchar("user_type", { length: 50 }).default("user").notNull(),
-  
-  // Auth fields
   password: varchar("password", { length: 255 }),
   is_email_verified: boolean("is_email_verified").default(false).notNull(),
   email_verification_token: varchar("email_verification_token", { length: 500 }),
@@ -17,8 +15,6 @@ export const users = pgTable("users", {
   reset_password_token: varchar("reset_password_token", { length: 500 }),
   reset_password_expires: timestamp("reset_password_expires"),
   refresh_token_enc: text("refresh_token_enc"),
-  
-  // Stripe
   stripe_customer_id: varchar("stripe_customer_id", { length: 255 }),
   
   createdAt: timestamp("created_at").defaultNow().notNull(),
