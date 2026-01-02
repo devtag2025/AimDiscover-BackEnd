@@ -113,6 +113,13 @@
       "when": 1765777508883,
       "tag": "0015_common_lady_bullseye",
       "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1767340620475,
+      "tag": "0016_light_guardsmen",
+      "breakpoints": true
     }
   ]
 }

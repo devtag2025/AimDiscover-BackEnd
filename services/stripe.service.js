@@ -11,11 +11,8 @@ console.log(env.STRIPE_WEBHOOK_SECRET,"This is the stripe secret",!!env.STRIPE_W
 
 class StripeService {
   async createCheckout(userId, planId) {
-    //  Fetch plan details from DB
     const [plan] = await db.select().from(plans).where(eq(plans.id, planId));
     if (!plan) throw new Error("Plan not found");
-
-    // 2️ Create Stripe Checkout Session
     const session = await stripe.checkout.sessions.create({
       mode: plan.billing_period === "ONE_TIME" ? "payment" : "subscription",
       payment_method_types: ["card"],
